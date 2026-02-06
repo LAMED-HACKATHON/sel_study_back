@@ -1,6 +1,6 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
-from app.api.routes import router
+from app.api.routes.users import router as user_router
 
 
 @asynccontextmanager
@@ -15,7 +15,7 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-app.include_router(router, prefix="")
+app.include_router(user_router, prefix="/api/users")
 
 
 @app.get("/")

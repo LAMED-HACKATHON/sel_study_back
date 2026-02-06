@@ -1,55 +1,57 @@
+from __future__ import annotations
+
 import ssl
-import os
-from app.core.config import settings
-from sqlalchemy.ext.asyncio import (
-    create_async_engine,
-    async_sessionmaker,
-    AsyncSession,
-)
+from typing import Any, Iterable
+
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase
 
-# =========================
-# SSL Context (조건부)
-# =========================
-ssl_context = None
-
-# Azure MySQL (호스트가 Azure 도메인인 경우) 또는 SSL이 필요한 경우
-# 로컬 MySQL(localhost/127.0.0.1)은 SSL 불필요
-if settings.MYSQL_HOST and settings.MYSQL_HOST not in ["localhost", "127.0.0.1"]:
-    # Azure MySQL용 SSL 설정
-    try:
-        # Linux 경로 시도
-        cert_path = "/etc/ssl/certs/ca-certificates.crt"
-        if os.path.exists(cert_path):
-            ssl_context = ssl.create_default_context(cafile=cert_path)
-            ssl_context.check_hostname = True
-            ssl_context.verify_mode = ssl.CERT_REQUIRED
-        else:
-            # Windows 또는 다른 환경: 시스템 기본 CA 사용
-            ssl_context = ssl.create_default_context()
-            ssl_context.check_hostname = True
-            ssl_context.verify_mode = ssl.CERT_REQUIRED
-    except Exception:
-        # SSL 설정 실패 시 None으로 설정 (로컬 MySQL은 SSL 불필요)
-        ssl_context = None
+from app.core.config import settings
 
 
+def _coerce_database_url(value: Any) -> str:
 
-# =========================
-# Async Engine
-# =========================
-connect_args = {}
-if ssl_context:
-    connect_args["ssl"] = ssl_context
+    if isinstance(value, str):
+        return value
+
+    if isinstance(value, set):
+        if not value:
+            raise ValueError("SQLALCHEMY_DATABASE_URL is empty.")
+        return str(next(iter(value)))
+
+    if isinstance(value, dict):
+        if not value:
+            raise ValueError("SQLALCHEMY_DATABASE_URL is empty.")
+        return str(next(iter(value.values())))
+
+    if isinstance(value, (list, tuple)):
+        if not value:
+            raise ValueError("SQLALCHEMY_DATABASE_URL is empty.")
+        return str(value[0])
+
+    return str(value)
+
+
+def _build_connect_args() -> dict[str, Any]:
+
+
+    host = (settings.MYSQL_HOST or "").strip().lower()
+    if host in {"localhost", "127.0.0.1"}:
+        return {}
+
+
+    ssl_context = ssl.create_default_context()
+    ssl_context.check_hostname = True
+    ssl_context.verify_mode = ssl.CERT_REQUIRED
+    return {"ssl": ssl_context}
+
+
+DATABASE_URL = _coerce_database_url(settings.SQLALCHEMY_DATABASE_URL)
 
 engine = create_async_engine(
-    settings.SQLALCHEMY_DATABASE_URL,
+    DATABASE_URL,
     pool_pre_ping=True,
-    pool_size=settings.DB_POOL_SIZE,           # 풀 기본 크기
-    max_overflow=settings.DB_MAX_OVERFLOW,     # 순간 트래픽 버퍼
-    pool_timeout=settings.DB_POOL_TIMEOUT,     # 풀 대기 시간
-    pool_recycle=settings.DB_POOL_RECYCLE,  
-    connect_args=connect_args,  # SSL이 None이면 전달하지 않음
+    connect_args=_build_connect_args(),
 )
 
 
