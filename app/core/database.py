@@ -37,13 +37,16 @@ def _build_connect_args() -> dict[str, Any]:
 
     host = (settings.MYSQL_HOST or "").strip().lower()
     if host in {"localhost", "127.0.0.1"}:
-        return {}
+        # Local DB: no SSL, keep defaults.
+        return {"connect_timeout": 5}
 
 
+    # Remote DB: add SSL (if available) and shorten connect timeout
+    # so API fails fast instead of hanging.
     ssl_context = ssl.create_default_context()
     ssl_context.check_hostname = True
     ssl_context.verify_mode = ssl.CERT_REQUIRED
-    return {"ssl": ssl_context}
+    return {"ssl": ssl_context, "connect_timeout": 5}
 
 
 DATABASE_URL = _coerce_database_url(settings.SQLALCHEMY_DATABASE_URL)
@@ -51,6 +54,7 @@ DATABASE_URL = _coerce_database_url(settings.SQLALCHEMY_DATABASE_URL)
 engine = create_async_engine(
     DATABASE_URL,
     pool_pre_ping=True,
+    pool_timeout=5,
     connect_args=_build_connect_args(),
 )
 

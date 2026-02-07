@@ -24,7 +24,7 @@ async def login(request: LoginRequest, response: Response, user_service: UserSer
         value = session_id,
         httponly=True,
         secure=False,
-        samesite="Lax",
+        samesite="lax",
     )
 
     return login_response
@@ -40,8 +40,4 @@ async def logout(session_id: str, user_id: int = Depends(get_current_user_id)):
 @router.get("/mentee", response_model=list[MenteeInfo])
 async def get_mentee(user_id: int = Depends(get_current_user_id), user_service: UserService = Depends(get_user_service)):
     return await user_service.get_mentee(user_id)
-
-    
-
-    
 

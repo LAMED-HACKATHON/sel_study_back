@@ -1,0 +1,21 @@
+[project]
+name = "sel-study-back"
+version = "0.1.0"
+description = "FastAPI backend for sel_study_back"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi>=0.110",
+  "uvicorn[standard]>=0.24",
+  "sqlalchemy>=2.0",
+  "aiomysql>=0.2",
+  "pydantic>=2.7",
+  "pydantic-settings>=2.0",
+  "python-dotenv>=1.0",
+]
+
+[tool.uv]
+dev-dependencies = [
+  "ruff>=0.6",
+  "basedpyright>=1.21",
+]

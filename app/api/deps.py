@@ -4,14 +4,22 @@ from app.core.database import get_db
 
 from app.services.user_service import UserService
 from app.repositories.user_repo import UserRepository
+from app.repositories.todo_repo import TodoRepository
+from app.services.todo_service import TodoService
 
 from app.core.http_session import http_session
+
 
 
 async def get_user_service(db: AsyncSession = Depends(get_db)) -> UserService:
 
     user_repo = UserRepository(db)
     return UserService(user_repo)
+
+async def get_todo_service(db: AsyncSession = Depends(get_db)) -> TodoService:
+
+    todo_repo = TodoRepository(db)
+    return TodoService(todo_repo)
 
 
 async def get_current_user_id(session_id: str | None = Cookie(default=None),):
