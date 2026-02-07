@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 
-from app.schemas.users import LoginRequest, LoginResponse
+from app.schemas.users import LoginRequest, LoginResponse, MenteeInfo
 from app.api.deps import get_current_user_id, get_user_service
 from app.core.http_session import http_session
 from app.services.user_service import UserService
@@ -35,6 +35,13 @@ async def logout(session_id: str, user_id: int = Depends(get_current_user_id)):
     return{
         "success" : True
     }
+
+
+@router.get("/mentee", response_model=list[MenteeInfo])
+async def get_mentee(user_id: int = Depends(get_current_user_id), user_service: UserService = Depends(get_user_service)):
+    return await user_service.get_mentee(user_id)
+
+    
 
     
 

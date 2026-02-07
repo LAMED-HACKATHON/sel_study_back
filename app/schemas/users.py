@@ -20,3 +20,10 @@ class LoginResponse(BaseModel):
     birth_date: date | None = None
     role: Literal["mentee", "mentor"]
     # profile_img: str
+
+
+class MenteeInfo(BaseModel):
+    mentee_id: int
+    name: str
+    school_name: str | None = None
+    birth_date: date | None = None

@@ -1,7 +1,7 @@
 
 import uuid
 from app.repositories.user_repo import UserRepository
-from app.schemas.users import LoginRequest, LoginResponse
+from app.schemas.users import LoginRequest, LoginResponse, MenteeInfo
 from app.core.http_session import http_session
 
 
@@ -41,3 +41,20 @@ class UserService:
 
     async def logout(self, session_id: str):
         await http_session.invalidate(session_id)
+
+    # 학생 목록 조회
+    async def get_mentee(self, user_id: int) -> list[MenteeInfo]:
+        
+        mentees = await self.user_repo.get_mentees_by_mentor_id(user_id)
+
+        result = []
+        for mentee_id, name, school_name, birth_date in mentees:
+            result.append(
+                MenteeInfo(
+                    mentee_id=mentee_id,
+                    name=name,
+                    school_name=school_name,
+                    birth_date=birth_date,
+                )
+            )
+        return result
