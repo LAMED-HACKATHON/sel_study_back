@@ -28,11 +28,12 @@ class AppendRequest(BaseModel):
 class AppendResponse(BaseModel):
     id: int
     total: int
-
+    content: str | None = None
 
 class AppendUpdateRequest(BaseModel):
     append_content_id: int
     content: str | None = None
+
 
 # class AppendUpdateResponse(BaseModel):
 
