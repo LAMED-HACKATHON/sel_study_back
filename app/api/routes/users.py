@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Response, status
+from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
 
 from app.schemas.users import LoginRequest, LoginResponse, MenteeInfo
 from app.api.deps import get_current_user_id, get_user_service
@@ -38,6 +38,23 @@ async def logout(session_id: str, user_id: int = Depends(get_current_user_id)):
 
 
 @router.get("/mentee", response_model=list[MenteeInfo])
-async def get_mentee(user_id: int = Depends(get_current_user_id), user_service: UserService = Depends(get_user_service)):
+async def get_mentee(
+    request: Request,
+    user_id: int = Depends(get_current_user_id),
+    user_service: UserService = Depends(get_user_service),
+):
+    print("router 진입")
+    print(f"user_id -> {user_id}")
+    print(f"method={request.method} url={request.url}")
+
+    # 헤더/쿠키/쿼리
+    print("headers ->", dict(request.headers))
+    print("cookies ->", request.cookies)
+    print("query_params ->", dict(request.query_params))
+
+    # 바디(raw). GET은 보통 비어있습니다.
+    body_bytes = await request.body()
+    print("body(raw) ->", body_bytes.decode("utf-8", errors="replace") if body_bytes else "<empty>")
+
     return await user_service.get_mentee(user_id)
 
