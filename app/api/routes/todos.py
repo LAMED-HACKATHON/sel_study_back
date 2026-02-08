@@ -39,6 +39,7 @@ async def update_todo(todo_id: int, request: TodoUpdateRequest, user_id: int = D
 @router.delete("/{todo_id}", response_model=TodoSuccessResponse)
 async def delete_todo(todo_id: int, user_id: int = Depends(get_current_user_id), todo_service: TodoService = Depends(get_todo_service)):
     return await todo_service.delete_todo(todo_id=todo_id, writer_id=user_id)
+    
 
 
 
