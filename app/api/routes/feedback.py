@@ -1,3 +1,7 @@
+from fastapi import APIRouter
+
+router = APIRouter()
+
 # 피드백 조회 - 없으면 빈값 생성 -> 조회
 
 # 피드백 수정

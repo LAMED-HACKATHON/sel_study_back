@@ -19,6 +19,9 @@ class UserService:
 
         if user.password != request.password:
             raise ValueError("비밀번호 불일치")
+        if user.role != request.role:
+            raise ValueError("role 불일치")
+
         
         session_id = str(uuid.uuid4())
 

@@ -3,8 +3,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.routes.users import router as user_router
 from app.api.routes.todos import router as todo_router
-from app.api.routes.todos import router as plan_router
-from app.api.routes.todos import router as feedback_router
+from app.api.routes.plans import router as plan_router
+from app.api.routes.feedback import router as feedback_router
 
 
 @asynccontextmanager

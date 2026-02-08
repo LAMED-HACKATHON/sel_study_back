@@ -8,6 +8,8 @@ from app.repositories.todo_repo import TodoRepository
 from app.services.todo_service import TodoService
 
 from app.core.http_session import http_session
+from app.repositories.plan_repo import PlanRepository
+from app.services.plan_service import PlanService
 
 
 
@@ -20,6 +22,11 @@ async def get_todo_service(db: AsyncSession = Depends(get_db)) -> TodoService:
 
     todo_repo = TodoRepository(db)
     return TodoService(todo_repo)
+
+async def get_plan_service(db: AsyncSession = Depends(get_db)) -> PlanService:
+
+    plan_repo = PlanRepository(db)
+    return PlanService(plan_repo)
 
 
 async def get_current_user_id(session_id: str | None = Cookie(default=None),):

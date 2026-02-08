@@ -11,8 +11,8 @@ from pydantic import BaseModel, Field
 
 
 class TodosRequest(BaseModel):
-    target_date: date = Field(..., description="조회할 날짜")
-    user_id: int = Field(..., ge=1)
+    target_date: date
+    user_id: int
 
 
 class TodoResponse(BaseModel):
