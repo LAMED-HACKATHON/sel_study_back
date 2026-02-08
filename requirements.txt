@@ -1,0 +1,16 @@
+# FastAPI 웹 프레임워크
+fastapi
+
+# ASGI 서버
+uvicorn
+
+# ORM 및 데이터베이스
+sqlalchemy
+aiomysql
+
+# 데이터 검증 및 설정
+pydantic
+pydantic-settings
+
+# 환경 변수 관리
+python-dotenv
