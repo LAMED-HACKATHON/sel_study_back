@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field
 # getTodos
 # req : 날짜, user_id
 # resp : 할일 - todo_id, subject_name, title, content, status_yn, todo_type, img_url1, img_url2,
-#        file_url1, file_url2, created_at
+# file_url1, file_url2, created_at
 
 
 class TodosRequest(BaseModel):
