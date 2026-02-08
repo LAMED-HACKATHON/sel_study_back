@@ -29,7 +29,7 @@ async def login(
         value = session_id,
         httponly=True,
         secure=False,
-        samesite="lax",
+        samesite=None,
     )
     print(f"method={http_request.method}")
     print(f"url={http_request.url}")  # 전체 URL
