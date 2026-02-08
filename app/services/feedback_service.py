@@ -1,4 +1,4 @@
-from app.schemas.feedpack import FeedbackRequest, FeedbackResponse, FeedbackUpdateRequest
+from app.schemas.feedpack import AppendCreateRequest, AppendCreateResponse, AppendRequest, AppendResponse, AppendUpdateRequest, AppendUpdateResponse, FeedbackRequest, FeedbackResponse, FeedbackUpdateRequest
 from app.repositories.feedback_repo import FeedbackRepository
 
 
@@ -35,4 +35,36 @@ class FeedbackService:
             content=feedback.content,
             summary=feedback.summary,
             created_at=feedback.created_at,
+        )
+
+    async def create_append(self, request: AppendRequest) -> AppendResponse:
+        rows = []
+        rows = await self.feedback_repo.get_append_by_feedback_id(request.feedback_id)
+
+        if not rows:
+            rows = await self.feedback_repo.create_append(request.feedback_id)
+
+        if rows:
+            page_number = request.page_number - 1
+            row = rows[page_number]
+
+            return AppendResponse(
+                id=row.id,
+                total=len(rows),
+                content=row.content
+            )
+
+
+    async def update_append(self, request: AppendUpdateRequest) -> AppendUpdateResponse:
+        append = await self.feedback_repo.update_append(request.append_content_id, request.content)
+        return AppendUpdateResponse(
+            feedback_id=append.feedback_id,
+            content=append.content
+        )
+
+    async def insert_append(self, request: AppendCreateRequest) -> AppendCreateResponse:
+        append = await self.feedback_repo.insert_append(request.feedback_id)
+        return AppendCreateResponse(
+            id=append.id,
+            content=append.content
         )

@@ -30,11 +30,21 @@ class AppendResponse(BaseModel):
     total: int
     content: str | None = None
 
+class AppendCreateRequest(BaseModel):
+    feedback_id: int
+    
+class AppendCreateResponse(BaseModel):
+    id: int
+    content: str | None = None
+
 class AppendUpdateRequest(BaseModel):
     append_content_id: int
     content: str | None = None
 
 
-# class AppendUpdateResponse(BaseModel):
+class AppendUpdateResponse(BaseModel):
+    feedback_id: int
+    content: str | None = None
+
 
 

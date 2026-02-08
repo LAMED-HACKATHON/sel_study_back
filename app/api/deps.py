@@ -40,12 +40,12 @@ async def get_feedback_service(db: AsyncSession = Depends(get_db)) -> FeedbackSe
 
 async def get_current_user_id(session_id: str | None = Cookie(default=None),):
     print(session_id)
-    # if not session_id:
-    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+    if not session_id:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
     user_id = await http_session.get(session_id)
     
-    # if not user_id:
-    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+    if not user_id:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
     return user_id

@@ -27,3 +27,5 @@ class MenteeInfo(BaseModel):
     name: str
     school_name: str | None = None
     birth_date: date | None = None
+
+

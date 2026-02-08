@@ -31,6 +31,7 @@ async def login(
         secure=True,
         samesite="none",
     )
+    
     print(f"method={http_request.method}")
     print(f"url={http_request.url}")  # 전체 URL
     print(f"base_url={http_request.base_url}")  # 스킴+호스트+포트
