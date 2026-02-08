@@ -17,6 +17,7 @@ class TodosRequest(BaseModel):
 
 class TodoResponse(BaseModel):
     todo_id: int
+    writer_id: int
     title: str
     content: str | None = None
     status_yn: bool = False
@@ -27,3 +28,32 @@ class TodoResponse(BaseModel):
     file_url1: str | None = None
     file_url2: str | None = None
     created_at: datetime
+
+
+class TodoInsertReqeust(BaseModel):
+    user_id: int
+    routine_yn: int
+    subject_id: int
+    title: str
+    content: str
+    file_url1: str | None = None
+    file_url2: str | None = None
+    
+    target_date: list[date] = Field(..., min_length=1)
+
+class TodoSuccessResponse(BaseModel):
+    success: bool
+
+
+class TodoUpdateRequest(BaseModel):
+    subject_id: int | None = None
+    title: str | None = None
+    content: str | None = None
+    status_yn: bool | None = None
+    todo_type: Literal["homework", "routine"] | None = None
+    img_url1: str | None = None
+    img_url2: str | None = None
+    file_url1: str | None = None
+    file_url2: str | None = None
+
+

@@ -1,6 +1,6 @@
 from datetime import date
 
-from sqlalchemy import BigInteger, String, column, func, select, table
+from sqlalchemy import BigInteger, String, column, delete, func, select, table, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import aliased
 
@@ -22,6 +22,7 @@ class TodoRepository:
         stmt = (
             select(
                 t.id.label("todo_id"),
+                t.writer_id,
                 t.title,
                 t.content,
                 t.status_yn,
@@ -58,6 +59,7 @@ class TodoRepository:
         stmt = (
             select(
                 t.id.label("todo_id"),
+                t.writer_id,
                 t.title,
                 t.content,
                 t.status_yn,
@@ -76,3 +78,22 @@ class TodoRepository:
 
         result = await self.db.execute(stmt)
         return result.one_or_none()
+
+    async def insert_todos(self, todos: list[Todo]) -> None:
+        self.db.add_all(todos)
+        await self.db.flush()
+        await self.db.commit()
+
+    async def update_todo(self, todo_id: int, writer_id: int, items: dict):
+        stmt = (
+            update(Todo)
+            .where(Todo.id == todo_id, Todo.writer_id == writer_id)
+            .values(**items)
+        )
+        await self.db.execute(stmt)
+        await self.db.commit()
+
+    async def delete_todo(self, todo_id: int, writer_id: int) -> None:
+        stmt = delete(Todo).where(Todo.id == todo_id, Todo.writer_id == writer_id)
+        await self.db.execute(stmt)
+        await self.db.commit()

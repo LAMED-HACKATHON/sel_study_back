@@ -8,12 +8,15 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.database import Base
 
+from app.model.subjects import Subject
+
 
 class Todo(Base):
     __tablename__ = "todos"
 
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
     user_id: Mapped[int] = mapped_column(BigInteger, nullable=False)
+    writer_id: Mapped[int] = mapped_column(BigInteger, ForeignKey("users.id"), nullable=False)
     subject_id: Mapped[int] = mapped_column(BigInteger, ForeignKey("subjects.id"), nullable=False)
     todo_type: Mapped[str | None] = mapped_column(
         Enum("homework", "routine", name="todo_type"),
