@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 
 from app.api.deps import get_feedback_service
-from app.schemas.feedpack import AppendCreateRequest, AppendCreateResponse, AppendRequest, AppendResponse, AppendUpdateRequest, AppendUpdateResponse, FeedbackRequest, FeedbackResponse, FeedbackUpdateRequest
+from app.schemas.feedpack import AppendCreateRequest, AppendCreateResponse, AppendDeleteRequest, AppendRequest, AppendResponse, AppendUpdateRequest, AppendUpdateResponse, FeedbackRequest, FeedbackResponse, FeedbackUpdateRequest
 from app.services.feedback_service import FeedbackService
 
 router = APIRouter()
@@ -27,8 +27,12 @@ async def create_append(request: AppendRequest, feedback_service: FeedbackServic
 async def insert_append(request: AppendCreateRequest, feedback_service: FeedbackService = Depends(get_feedback_service)):
     return await feedback_service.insert_append(request)
 
-
 # # 추가내용 수정
 @router.put("/append/update", response_model=AppendUpdateResponse)
 async def update_append(request: AppendUpdateRequest, feedback_service: FeedbackService = Depends(get_feedback_service)):
     return await feedback_service.update_append(request)
+
+## 추가내용 삭제
+@router.delete("/append/delete")
+async def delete_append(request: AppendDeleteRequest, feedback_service: FeedbackService = Depends(get_feedback_service)):
+    return await feedback_service.delete_append(request)

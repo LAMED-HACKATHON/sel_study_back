@@ -96,3 +96,18 @@ class FeedbackRepository:
         await self.db.commit()
         await self.db.refresh(append)
         return append
+
+    async def delete_append(self, append_content_id: int) -> None:
+        stmt = (
+            select(AppendContent)
+            .where(AppendContent.id == append_content_id)
+            .limit(1)
+        )
+        result = await self.db.execute(stmt)
+        append = result.scalar_one_or_none()
+
+        if append is None:
+            return
+
+        await self.db.delete(append)
+        await self.db.commit()

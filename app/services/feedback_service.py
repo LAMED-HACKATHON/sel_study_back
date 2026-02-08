@@ -1,4 +1,4 @@
-from app.schemas.feedpack import AppendCreateRequest, AppendCreateResponse, AppendRequest, AppendResponse, AppendUpdateRequest, AppendUpdateResponse, FeedbackRequest, FeedbackResponse, FeedbackUpdateRequest
+from app.schemas.feedpack import AppendCreateRequest, AppendCreateResponse, AppendDeleteRequest, AppendRequest, AppendResponse, AppendUpdateRequest, AppendUpdateResponse, FeedbackRequest, FeedbackResponse, FeedbackUpdateRequest
 from app.repositories.feedback_repo import FeedbackRepository
 
 
@@ -68,3 +68,6 @@ class FeedbackService:
             id=append.id,
             content=append.content
         )
+
+    async def delete_append(self, request: AppendDeleteRequest) -> None:
+        await self.feedback_repo.delete_append(request.id)
