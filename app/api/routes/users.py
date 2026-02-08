@@ -25,10 +25,10 @@ async def login(
             detail="아이디 비밀번호가 일치하지 않습니다",
         )
     response.set_cookie(
-        key = "session_id",
-        value = session_id,
+        key="session_id",
+        value=session_id,
         httponly=True,
-        secure=False,
+        secure=True,
         samesite="none",
     )
     print(f"method={http_request.method}")
